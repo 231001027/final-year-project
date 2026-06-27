@@ -1,0 +1,16 @@
+export {
+  authenticateFaculty,
+  authenticateTeam,
+  getProjects,
+  getProjectById,
+  createProject,
+  updateProject,
+  deleteProject,
+  getTeams,
+  updateTeam,
+  getAllocations,
+  getAllocationDetails,
+  createAllocation,
+  hasActiveAllocationForProject,
+  getAllocatedProjectIds,
+} from './api';

@@ -1,4 +1,4 @@
-import { Allocation, Faculty, Project, Team, AllocationWithDetails } from '../types';
+import { Allocation, Project, Team, AllocationWithDetails } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
@@ -31,21 +31,6 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   }
 
   return data as T;
-}
-
-export async function authenticateFaculty(
-  facultyId: string,
-  password: string
-): Promise<Faculty | null> {
-  try {
-    return await request<Faculty>('/auth/faculty/login', {
-      method: 'POST',
-      body: JSON.stringify({ faculty_id: facultyId, password }),
-    });
-  } catch (err) {
-    if (err instanceof ApiError && err.status === 401) return null;
-    throw err;
-  }
 }
 
 export async function authenticateTeam(teamId: string, password: string): Promise<Team | null> {

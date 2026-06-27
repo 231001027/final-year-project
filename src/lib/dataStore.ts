@@ -1,5 +1,4 @@
 export {
-  authenticateFaculty,
   authenticateTeam,
   getProjects,
   getProjectById,

@@ -1,14 +1,3 @@
-export interface Faculty {
-  id: string;
-  faculty_id: string;
-  name: string;
-  email: string;
-  password_hash?: string;
-  department: string;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface TeamMemberFields {
   name: string;
   roll_no: string;
@@ -71,10 +60,7 @@ export interface AllocationWithDetails extends Allocation {
   project?: Project;
 }
 
-export type UserRole = 'faculty' | 'team' | null;
-
 export interface AuthState {
-  user: Faculty | Team | null;
-  role: UserRole;
+  user: Team | null;
   isAuthenticated: boolean;
 }

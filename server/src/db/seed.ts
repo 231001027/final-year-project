@@ -1,45 +1,5 @@
 import { pool } from './pool.js';
 
-const FACULTY_IDS = {
-  kalaivani: 'a1111111-1111-4111-8111-111111111001',
-  pragadeesh: 'a1111111-1111-4111-8111-111111111002',
-  priyanka: 'a1111111-1111-4111-8111-111111111003',
-  valarmathie: 'a1111111-1111-4111-8111-111111111004',
-  indumathi: 'a1111111-1111-4111-8111-111111111005',
-  muthukumar: 'a1111111-1111-4111-8111-111111111006',
-} as const;
-
-type MentorKey = keyof typeof FACULTY_IDS;
-
-const MENTOR_NAMES: Record<MentorKey, string> = {
-  kalaivani: 'Dr.A.Kalaivani',
-  pragadeesh: 'Mr.M.Pragadeesh',
-  priyanka: 'Mrs.D.Priyanka',
-  valarmathie: 'Dr.P.Valarmathie',
-  indumathi: 'Mrs.K.Indumathi',
-  muthukumar: 'Dr.B.Muthukumar',
-};
-
-/** Teams with pre-assigned mentor and project topic (Titles 1–16) */
-const assignedTeams: { team_id: string; mentorKey: MentorKey; projectNum: number }[] = [
-  { team_id: '27A03', mentorKey: 'kalaivani', projectNum: 1 },
-  { team_id: '27A04', mentorKey: 'pragadeesh', projectNum: 2 },
-  { team_id: '27A05', mentorKey: 'priyanka', projectNum: 3 },
-  { team_id: '27A08', mentorKey: 'kalaivani', projectNum: 4 },
-  { team_id: '27A12', mentorKey: 'pragadeesh', projectNum: 5 },
-  { team_id: '27A19', mentorKey: 'valarmathie', projectNum: 6 },
-  { team_id: '27A22', mentorKey: 'kalaivani', projectNum: 7 },
-  { team_id: '27A25', mentorKey: 'indumathi', projectNum: 8 },
-  { team_id: '27B01', mentorKey: 'pragadeesh', projectNum: 9 },
-  { team_id: '27B09', mentorKey: 'priyanka', projectNum: 10 },
-  { team_id: '27C02', mentorKey: 'kalaivani', projectNum: 11 },
-  { team_id: '27C13', mentorKey: 'kalaivani', projectNum: 12 },
-  { team_id: '27C19', mentorKey: 'priyanka', projectNum: 13 },
-  { team_id: '27D02', mentorKey: 'muthukumar', projectNum: 14 },
-  { team_id: '27D10', mentorKey: 'muthukumar', projectNum: 15 },
-  { team_id: '27D27', mentorKey: 'valarmathie', projectNum: 16 },
-];
-
 function projectId(num: number) {
   return `c3333333-3333-4333-8333-333333333${String(num).padStart(3, '0')}`;
 }
@@ -54,37 +14,6 @@ async function seed() {
   await pool.query('DELETE FROM projects');
   await pool.query('DELETE FROM faculty');
 
-  await pool.query(
-    `INSERT INTO faculty (id, faculty_id, name, email, password_hash, department) VALUES
-      ($1, 'FAC001', $2, 'kalaivani@college.edu', 'faculty123', 'Computer Science'),
-      ($3, 'FAC002', $4, 'pragadeesh@college.edu', 'faculty123', 'Computer Science'),
-      ($5, 'FAC003', $6, 'priyanka@college.edu', 'faculty123', 'Computer Science'),
-      ($7, 'FAC004', $8, 'valarmathie@college.edu', 'faculty123', 'Computer Science'),
-      ($9, 'FAC005', $10, 'indumathi@college.edu', 'faculty123', 'Computer Science'),
-      ($11, 'FAC006', $12, 'muthukumar@college.edu', 'faculty123', 'Computer Science')`,
-    [
-      FACULTY_IDS.kalaivani,
-      MENTOR_NAMES.kalaivani,
-      FACULTY_IDS.pragadeesh,
-      MENTOR_NAMES.pragadeesh,
-      FACULTY_IDS.priyanka,
-      MENTOR_NAMES.priyanka,
-      FACULTY_IDS.valarmathie,
-      MENTOR_NAMES.valarmathie,
-      FACULTY_IDS.indumathi,
-      MENTOR_NAMES.indumathi,
-      FACULTY_IDS.muthukumar,
-      MENTOR_NAMES.muthukumar,
-    ]
-  );
-
-  const mentorByProjectNum = new Map(
-    assignedTeams.map((entry) => [
-      entry.projectNum,
-      { guide: MENTOR_NAMES[entry.mentorKey], facultyId: FACULTY_IDS[entry.mentorKey] },
-    ])
-  );
-
   const projects = [
     [
       'c3333333-3333-4333-8333-333333333001',
@@ -93,12 +22,12 @@ async function seed() {
     ],
     [
       'c3333333-3333-4333-8333-333333333002',
-      'Title2 - An Adaptive Reinforcement Learning–Based Heap Optimization Framework for Robust Medical Image Diagnosis and Prediction (ARL-HBO)',
+      'Title2 - An Adaptive Reinforcement Learning-Based Heap Optimization Framework for Robust Medical Image Diagnosis and Prediction (ARL-HBO)',
       'Deep Learning'
     ],
     [
       'c3333333-3333-4333-8333-333333333003',
-      'Title3 - Fuzzy-Based Multi-Agent System In STEM Education For Video, Audio, Read/Write, Kinesthetic And Medical Image Learning Environment (FBMS-VARK)',
+      'Title3 - Fuzzy-Based Multi-Agent System In Stem Education For Video, Audio, Read/Write, Kinesthetic And Medical Image Learning Environment (FBMS-VARK)',
       'Multi-Agent System'
     ],
     [
@@ -303,7 +232,7 @@ async function seed() {
     ],
     [
       'c3333333-3333-4333-8333-333333333044',
-      'Title44 - A Framework for Prediction of Tomato Cultivation Seasons and Districts in Tamil Nadu and Analyze the Quantity of Production in a Year Using AI-Based Decision Model',
+      'Title44 - A Framework for Prediction of Tomato Cultivation Seasons and Analysis of Annual Production Quantity in Tamil Nadu Using AI-Based Decision Model',
       'Deep Learning and AI, Time GAN'
     ],
     [
@@ -363,7 +292,7 @@ async function seed() {
     ],
     [
       'c3333333-3333-4333-8333-333333333056',
-      'Title56 - Quantum-Assisted Climate Resilience Assessment and Smart Crop Recommendation System Under Future Climate Scenarios',
+      'Title56 - Quantum-Assisted Climate Resilience Assessment and Smart Crop Recommendation System under Future Climate Scenarios',
       'Climate Change and Agriculture'
     ],
     [
@@ -493,226 +422,191 @@ async function seed() {
     ],
     [
       'c3333333-3333-4333-8333-333333333082',
-      'Title82 - Machine Learning-Based Credit Card Fraud Detection System',
-      'Machine Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333083',
-      'Title83 - Predictive Maintenance of Industrial Equipment Using Machine Learning',
-      'Machine Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333084',
-      'Title84 - AI-Powered Resume Screening and Candidate Ranking System',
-      'Artificial Intelligence'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333085',
-      'Title85 - Deep Learning-Based Fake News Detection and Verification System',
-      'Deep Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333086',
-      'Title86 - Smart Energy Consumption Prediction and Optimization System',
-      'Machine Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333087',
-      'Title87 - Multilingual Chatbot for Citizen Services',
-      'Natural Language Processing (NLP)'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333088',
-      'Title88 - Real-Time Face Mask Detection and Compliance Monitoring',
+      'Title82 - Image Forgery and Deepfake Detection Using Digital Image Processing',
       'Computer Vision'
     ],
     [
+      'c3333333-3333-4333-8333-333333333083',
+      'Title83 - AI-Based ERP Software Management',
+      'Artificial Intelligence'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333084',
+      'Title84 - Generative AI-Based Smart Academic Digital Twin for Student Success Prediction',
+      'Gen AI'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333085',
+      'Title85 - Federated Learning-Based Privacy-Preserving Healthcare Analytics Platform',
+      'Machine Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333086',
+      'Title86 - AI-Driven Edge-Cloud Smart Agriculture Monitoring System',
+      'AI and IoT'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333087',
+      'Title87 - Generative AI-Powered Intelligent Placement and Career Recommendation System',
+      'Gen AI'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333088',
+      'Title88 - Smart Agro Advisor',
+      'Artificial Intelligence'
+    ],
+    [
       'c3333333-3333-4333-8333-333333333089',
-      'Title89 - AI-Based Smart Attendance Management System',
+      'Title89 - SmartCare AI: Health Risk Prediction and Personalised Wellness Guidance',
       'Artificial Intelligence'
     ],
     [
       'c3333333-3333-4333-8333-333333333090',
-      'Title90 - Predictive Analytics for Student Academic Performance',
-      'Machine Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333091',
-      'Title91 - AI-Based Network Anomaly Detection and Threat Intelligence Framework',
-      'Cybersecurity'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333092',
-      'Title92 - Blockchain-Based Secure Academic Certificate Verification System',
-      'Blockchain'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333093',
-      'Title93 - AI-Powered Smart Healthcare Appointment and Recommendation System',
-      'Artificial Intelligence'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333094',
-      'Title94 - Real-Time Vehicle Detection and Traffic Monitoring System',
+      'Title90 - Assessing Water Quality of a Lake Using a Combination of Drone Images and Artificial Intelligence Models',
       'Computer Vision'
     ],
     [
+      'c3333333-3333-4333-8333-333333333091',
+      'Title91 - Deep Learning on Segmenting Large and Narrow Rivers with Aerial RGB Imagery: A Comparison of Convolutional and Vision-Transformer Networks',
+      'Deep Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333092',
+      'Title92 - Hybrid Vision Transformer and Convolutional Network for Automated Road Damage Detection',
+      'Deep Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333093',
+      'Title93 - RAISE-Earth: A Physics-Informed Adaptive Deep Learning Framework for Remote Sensing Image Enhancement and Semantic Analysis',
+      'Deep Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333094',
+      'Title94 - AI-Powered Disease Prediction System Using Patient Health Records',
+      'Artificial Intelligence'
+    ],
+    [
       'c3333333-3333-4333-8333-333333333095',
-      'Title95 - Customer Churn Prediction Using Machine Learning Techniques',
+      'Title95 - Privacy-Preserving Disease Prediction Using Federated Learning Across IoMT Devices',
       'Machine Learning'
     ],
     [
       'c3333333-3333-4333-8333-333333333096',
-      'Title96 - Speech Emotion Recognition Using Deep Learning',
-      'Deep Learning'
+      'Title96 - Blockchain-Based Secure Patient Data Sharing System for IoMT Networks',
+      'Blockchain'
     ],
     [
       'c3333333-3333-4333-8333-333333333097',
-      'Title97 - AI-Based Disaster Response and Emergency Resource Allocation System',
-      'Artificial Intelligence'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333098',
-      'Title98 - Smart Parking Management System Using Computer Vision',
-      'Computer Vision'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333099',
-      'Title99 - Loan Eligibility Prediction and Risk Assessment Framework',
-      'Machine Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333100',
-      'Title100 - Automated Question Answering System Using Large Language Models',
+      'Title97 - Intelligent Chatbot for College Enquiry and Student Support Using NLP',
       'Natural Language Processing'
     ],
     [
+      'c3333333-3333-4333-8333-333333333098',
+      'Title98 - Blockchain-Enabled Supply Chain Traceability System',
+      'Blockchain'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333099',
+      'Title99 - Autonomous Swarm Robotics with Decentralized Decision-Making Using Blockchain',
+      'Blockchain'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333100',
+      'Title100 - Edge-AI-Based Real-Time Video Analytics with Model Compression Techniques',
+      'Artificial Intelligence'
+    ],
+    [
       'c3333333-3333-4333-8333-333333333101',
-      'Title101 - Deep Learning-Based Crop Disease Identification System',
-      'Deep Learning'
+      'Title101 - Railway Track Fault Detection System Using Sensors and AI',
+      'Artificial Intelligence'
     ],
     [
       'c3333333-3333-4333-8333-333333333102',
-      'Title102 - Intelligent Tourism Recommendation and Planning Assistant',
-      'Artificial Intelligence'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333103',
-      'Title103 - Smart Air Quality Monitoring and Prediction System',
-      'Machine Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333104',
-      'Title104 - Automated Road Damage Detection and Classification',
-      'Computer Vision'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333105',
-      'Title105 - AI-Driven Security Operations Center (SOC) Assistant',
-      'Cybersecurity'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333106',
-      'Title106 - Intelligent Public Transport Route Optimization System',
-      'Artificial Intelligence'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333107',
-      'Title107 - Predictive Analytics Framework for Retail Demand Forecasting',
-      'Machine Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333108',
-      'Title108 - Deep Learning-Based Human Activity Recognition System',
+      'Title102 - Privacy-Preserving Ensemble Federated Deep Learning Framework for Early Lung Cancer Prediction in Smart Healthcare Systems',
       'Deep Learning'
     ],
     [
-      'c3333333-3333-4333-8333-333333333109',
-      'Title109 - Smart Water Distribution and Leakage Detection System',
-      'Artificial Intelligence'
+      'c3333333-3333-4333-8333-333333333103',
+      'Title103 - A Hybrid Deep Learning Framework for Spatiotemporal Prediction of Agricultural Water Demand Using Remote Sensing Data',
+      'Deep Learning'
     ],
     [
-      'c3333333-3333-4333-8333-333333333110',
-      'Title110 - Machine Learning Framework for Insurance Claim Fraud Detection',
+      'c3333333-3333-4333-8333-333333333104',
+      'Title104 - Multimodal Fusion Deep Learning Framework for Automated Classification of Hepatocellular Carcinoma Using Histopathological and Clinical Features',
+      'Deep Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333105',
+      'Title105 - Advanced Deep Learning Framework for Accurate Plant Leaf Disease Prediction and Classification',
+      'Deep Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333106',
+      'Title106 - Multi-Source Time-Series Forecasting for Urban Air Quality Prediction',
       'Machine Learning'
     ],
     [
+      'c3333333-3333-4333-8333-333333333107',
+      'Title107 - Hybrid Transformer–LSTM Model for Short-Term Electricity Demand Forecasting',
+      'Deep Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333108',
+      'Title108 - Multivariate Time Series Forecasting for Early Sepsis Prediction in Intensive Care Units',
+      'Machine Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333109',
+      'Title109 - Transformer-Based Multivariate Water Demand Forecasting for Smart Cities',
+      'Deep Learning'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333110',
+      'Title110 - An AR-Enabled Spatial Navigation and Assistive Computing System for Blind and Visually Impaired Individuals in Complex Indoor Environments',
+      'AR/VR'
+    ],
+    [
       'c3333333-3333-4333-8333-333333333111',
-      'Title111 - AI-Powered Smart Surveillance and Suspicious Activity Detection',
+      'Title111 - Edge-AI Video Analytics System for Real-Time Parking Occupancy Detection in Commercial Malls',
       'Computer Vision'
     ],
     [
       'c3333333-3333-4333-8333-333333333112',
-      'Title112 - Intelligent Legal Document Summarization System',
-      'Natural Language Processing'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333113',
-      'Title113 - AI-Based Mental Health Support and Monitoring Platform',
-      'Artificial Intelligence'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333114',
-      'Title114 - Predictive Analytics for Hospital Resource Allocation',
+      'Title112 - A Hybrid Machine Learning Approach for Urban Population Forecasting and Resource Optimization in Smart Cities',
       'Machine Learning'
     ],
     [
+      'c3333333-3333-4333-8333-333333333113',
+      'Title113 - Edge-AI Driven Vision Systems for Real-Time Hydroponic Nutrient Deficiency Identification Using Lightweight Transformers',
+      'Computer Vision'
+    ],
+    [
+      'c3333333-3333-4333-8333-333333333114',
+      'Title114 - Smart Navigation Assistant for Visually Impaired People',
+      'Artificial Intelligence'
+    ],
+    [
       'c3333333-3333-4333-8333-333333333115',
-      'Title115 - Deep Learning-Based Medical Diagnosis Support System',
-      'Deep Learning'
+      'Title115 - EcoDrive AI: Context-Aware Energy-Efficient Autonomous Vehicle Navigation System',
+      'Artificial Intelligence'
     ],
     [
       'c3333333-3333-4333-8333-333333333116',
-      'Title116 - AI-Driven Smart Farming Advisory Platform',
+      'Title116 - Smart Citizen Grievance Management System',
       'Artificial Intelligence'
     ],
     [
       'c3333333-3333-4333-8333-333333333117',
-      'Title117 - Intelligent Malware Analysis and Classification System',
-      'Cybersecurity'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333118',
-      'Title118 - Predictive Supply Chain Optimization Using Machine Learning',
-      'Machine Learning'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333119',
-      'Title119 - Automated Waste Classification Using Image Processing',
-      'Computer Vision'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333120',
-      'Title120 - AI-Powered Smart City Management Dashboard',
-      'Artificial Intelligence'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333121',
-      'Title121 - Smart Citizen Grievance Management System',
-      'Social Welfare - AI'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333122',
-      'Title122 - Women Safety Monitoring and Emergency Alert System',
+      'Title117 - Predictive Women Safety and Emergency Response System Using Multimodal AI',
       'Women Safety - AI'
-    ],
-    [
-      'c3333333-3333-4333-8333-333333333123',
-      'Title123 - Predictive Women Safety and Emergency Response System Using Multimodal AI',
-      'Women Safety - AI,DL'
     ]
   ];
 
   for (const [id, title, domain] of projects) {
-    const projectNum = parseInt(id.slice(-3), 10);
-    const mentor = mentorByProjectNum.get(projectNum);
-    const facultyGuide = mentor?.guide ?? 'Not Assigned';
-    const createdBy = mentor?.facultyId ?? null;
-
     await pool.query(
       `INSERT INTO projects (id, title, domain, description, faculty_guide, max_teams, created_by)
        VALUES ($1, $2, $3, $4, $5, 1, $6)`,
-      [id, title, domain, 'No description available.', facultyGuide, createdBy]
+      [id, title, domain, 'No description available.', 'Not Assigned', null]
     );
   }
 

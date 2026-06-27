@@ -8,7 +8,7 @@ import Badge from '../../components/ui/Badge';
 import { LoadingSpinner, EmptyState } from '../../components/ui/Loading';
 import TeamMemberDetails from '../../components/student/TeamMemberDetails';
 import { getTeamMember } from '../../components/student/TeamMemberCard';
-import { BookOpen, User, Calendar, CheckCircle } from 'lucide-react';
+import { BookOpen, Calendar, CheckCircle } from 'lucide-react';
 
 export default function MyProject() {
   const { user } = useAuth();
@@ -90,38 +90,15 @@ export default function MyProject() {
 
                     <div className="mb-6">
                       <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                        {project.title.match(/^Title(\d+)/) && parseInt(project.title.match(/^Title(\d+)/)![1]) <= 16
-                          ? 'Already Selected'
-                          : project.title}
+                        {project.title}
                       </h2>
                       <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                         Description
                       </h3>
                       <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                        {project.title.match(/^Title(\d+)/) && parseInt(project.title.match(/^Title(\d+)/)![1]) <= 16
-                          ? 'Your project has been pre-assigned by the faculty.'
-                          : project.description}
+                        {project.description}
                       </p>
                     </div>
-
-                    {project.faculty_guide !== 'Not Assigned' && (
-                      <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
-                        <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">
-                          Project Guide
-                        </h3>
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center text-white font-semibold text-lg">
-                            {project.faculty_guide[0]}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-900 dark:text-white">
-                              {project.faculty_guide}
-                            </p>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Faculty Guide</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -162,18 +139,6 @@ export default function MyProject() {
                               day: 'numeric',
                             })
                           : 'N/A'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
-                      <User className="w-5 h-5 text-teal-600 dark:text-teal-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Faculty Guide</p>
-                      <p className="font-medium text-slate-900 dark:text-white">
-                        {project.faculty_guide}
                       </p>
                     </div>
                   </div>

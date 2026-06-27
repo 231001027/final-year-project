@@ -6,7 +6,6 @@ import { NotificationProvider } from './context/NotificationContext';
 
 // Public Pages
 import LandingPage from './pages/LandingPage';
-import FacultyLogin from './pages/FacultyLogin';
 import TeamLogin from './pages/TeamLogin';
 
 // Student Pages
@@ -15,24 +14,12 @@ import AvailableTopics from './pages/student/AvailableTopics';
 import MyProject from './pages/student/MyProject';
 import StudentProfile from './pages/student/StudentProfile';
 
-// Faculty Pages
-import FacultyDashboard from './pages/faculty/FacultyDashboard';
-import ManageTopics from './pages/faculty/ManageTopics';
-import AddTopic from './pages/faculty/AddTopic';
-import EditTopic from './pages/faculty/EditTopic';
-import ViewAllocations from './pages/faculty/ViewAllocations';
-import FacultyProfile from './pages/faculty/FacultyProfile';
-
 // Protected Route Component
-function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode; requiredRole: 'faculty' | 'team' }) {
-  const { isAuthenticated, role } = useAuth();
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login/team" replace />;
-  }
-
-  if (role !== requiredRole) {
-    return <Navigate to={role === 'faculty' ? '/faculty/dashboard' : '/student/dashboard'} replace />;
   }
 
   return <>{children}</>;
@@ -40,10 +27,10 @@ function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode;
 
 // Public Route - redirects authenticated users to their dashboard
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, role } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
-    return <Navigate to={role === 'faculty' ? '/faculty/dashboard' : '/student/dashboard'} replace />;
+    return <Navigate to="/student/dashboard" replace />;
   }
 
   return <>{children}</>;
@@ -54,14 +41,6 @@ function AppRoutes() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<LandingPage />} />
-      <Route
-        path="/login/faculty"
-        element={
-          <PublicRoute>
-            <FacultyLogin />
-          </PublicRoute>
-        }
-      />
       <Route
         path="/login/team"
         element={
@@ -75,7 +54,7 @@ function AppRoutes() {
       <Route
         path="/student/dashboard"
         element={
-          <ProtectedRoute requiredRole="team">
+          <ProtectedRoute>
             <StudentDashboard />
           </ProtectedRoute>
         }
@@ -83,7 +62,7 @@ function AppRoutes() {
       <Route
         path="/student/topics"
         element={
-          <ProtectedRoute requiredRole="team">
+          <ProtectedRoute>
             <AvailableTopics />
           </ProtectedRoute>
         }
@@ -91,7 +70,7 @@ function AppRoutes() {
       <Route
         path="/student/my-project"
         element={
-          <ProtectedRoute requiredRole="team">
+          <ProtectedRoute>
             <MyProject />
           </ProtectedRoute>
         }
@@ -99,58 +78,8 @@ function AppRoutes() {
       <Route
         path="/student/profile"
         element={
-          <ProtectedRoute requiredRole="team">
+          <ProtectedRoute>
             <StudentProfile />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Faculty Routes */}
-      <Route
-        path="/faculty/dashboard"
-        element={
-          <ProtectedRoute requiredRole="faculty">
-            <FacultyDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/faculty/topics"
-        element={
-          <ProtectedRoute requiredRole="faculty">
-            <ManageTopics />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/faculty/topics/new"
-        element={
-          <ProtectedRoute requiredRole="faculty">
-            <AddTopic />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/faculty/topics/edit/:id"
-        element={
-          <ProtectedRoute requiredRole="faculty">
-            <EditTopic />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/faculty/allocations"
-        element={
-          <ProtectedRoute requiredRole="faculty">
-            <ViewAllocations />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/faculty/profile"
-        element={
-          <ProtectedRoute requiredRole="faculty">
-            <FacultyProfile />
           </ProtectedRoute>
         }
       />

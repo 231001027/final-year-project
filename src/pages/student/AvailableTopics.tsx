@@ -61,8 +61,7 @@ export default function AvailableTopics() {
     return projects.filter((project) => {
       const matchesSearch =
         project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.faculty_guide.toLowerCase().includes(searchTerm.toLowerCase());
+        project.description.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesDomain = domainFilter === 'all' || project.domain === domainFilter;
 
@@ -86,7 +85,7 @@ export default function AvailableTopics() {
       await createAllocation({
         project_id: confirmModal.project.id,
         team_id: team.id,
-        faculty_id: confirmModal.project.created_by,
+        faculty_id: null,
         status: 'allocated',
       });
 
@@ -148,7 +147,7 @@ export default function AvailableTopics() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <Input
-                placeholder="Search by title, description, or faculty..."
+                placeholder="Search by title or description..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 leftIcon={<Search className="w-5 h-5" />}

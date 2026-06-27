@@ -44,14 +44,13 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const { title, domain, description, faculty_guide, max_teams, created_by } =
-      req.body;
+    const { title, domain, description, max_teams } = req.body;
 
     const result = await pool.query(
       `INSERT INTO projects (title, domain, description, faculty_guide, max_teams, created_by)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [cleanProjectTitle(title), domain, description, faculty_guide, max_teams ?? 1, created_by]
+      [cleanProjectTitle(title), domain, description, 'Not Assigned', max_teams ?? 1, null]
     );
 
     res.status(201).json(mapProjectRow(result.rows[0]));
@@ -62,15 +61,14 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
   try {
-    const { title, domain, description, faculty_guide } = req.body;
+    const { title, domain, description } = req.body;
 
     const result = await pool.query(
       `UPDATE projects
-       SET title = $1, domain = $2, description = $3, faculty_guide = $4,
-           updated_at = NOW()
-       WHERE id = $5
+       SET title = $1, domain = $2, description = $3, updated_at = NOW()
+       WHERE id = $4
        RETURNING *`,
-      [cleanProjectTitle(title), domain, description, faculty_guide, req.params.id]
+      [cleanProjectTitle(title), domain, description, req.params.id]
     );
 
     if (result.rows.length === 0) {

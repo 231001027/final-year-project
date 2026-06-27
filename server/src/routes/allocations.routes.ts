@@ -64,7 +64,7 @@ router.post('/', async (req, res, next) => {
   const client = await pool.connect();
 
   try {
-    const { project_id, team_id, faculty_id } = req.body;
+    const { project_id, team_id } = req.body;
 
     if (!project_id || !team_id) {
       res.status(400).json({ message: 'project_id and team_id are required' });
@@ -102,7 +102,7 @@ router.post('/', async (req, res, next) => {
       `INSERT INTO allocations (project_id, team_id, faculty_id, status)
        VALUES ($1, $2, $3, 'allocated')
        RETURNING *`,
-      [project_id, team_id, faculty_id || null]
+      [project_id, team_id, null]
     );
 
     await client.query(

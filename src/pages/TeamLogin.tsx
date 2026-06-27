@@ -113,14 +113,6 @@ export default function TeamLogin() {
             </div>
           </div>
 
-          <div className="mt-6 text-center">
-            <Link
-              to="/login/faculty"
-              className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-            >
-              Login as Faculty instead
-            </Link>
-          </div>
         </div>
       </div>
     </div>

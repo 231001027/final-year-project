@@ -22,7 +22,7 @@ const features = [
   {
     icon: <BookOpen className="w-6 h-6" />,
     title: 'Project Topics',
-    description: 'Faculty can create diverse project topics across multiple domains.',
+    description: 'Browse diverse project topics across multiple domains.',
   },
   {
     icon: <ShieldCheck className="w-6 h-6" />,
@@ -63,11 +63,6 @@ export default function LandingPage() {
               >
                 {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
               </button>
-              <Link to="/login/faculty">
-                <Button variant="ghost" size="sm">
-                  Faculty Login
-                </Button>
-              </Link>
               <Link to="/login/team">
                 <Button size="sm">Team Login</Button>
               </Link>
@@ -92,17 +87,12 @@ export default function LandingPage() {
                 </span>
               </h1>
               <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 max-w-xl mx-auto lg:mx-0">
-                A modern platform for final-year students and faculty to manage project topic allotment efficiently. Create, publish, and select projects with ease.
+                A modern platform for final-year students to manage project topic allotment efficiently. Browse and select projects with ease.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Link to="/login/team">
                   <Button size="lg" rightIcon={<ArrowRight className="w-4 h-4" />}>
                     Student Login
-                  </Button>
-                </Link>
-                <Link to="/login/faculty">
-                  <Button variant="outline" size="lg" rightIcon={<ArrowRight className="w-4 h-4" />}>
-                    Faculty Portal
                   </Button>
                 </Link>
               </div>

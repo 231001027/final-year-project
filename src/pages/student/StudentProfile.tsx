@@ -120,21 +120,13 @@ export default function StudentProfile() {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-                      {selectedProject.title.match(/^Title(\d+)/) && parseInt(selectedProject.title.match(/^Title(\d+)/)![1]) <= 16
-                        ? 'Already Selected'
-                        : selectedProject.title}
+                      {selectedProject.title}
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       <Badge variant="info">{selectedProject.domain}</Badge>
                       <Badge variant="success">Allocated</Badge>
                     </div>
                   </div>
-                  {selectedProject.faculty_guide !== 'Not Assigned' && (
-                    <div>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Faculty Guide</p>
-                      <p className="font-medium text-slate-900 dark:text-white">{selectedProject.faculty_guide}</p>
-                    </div>
-                  )}
                   <div>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Description</p>
                     <p className="text-slate-700 dark:text-slate-300">{selectedProject.description}</p>

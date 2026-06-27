@@ -248,9 +248,6 @@ export default function StudentDashboard() {
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t border-teal-200 dark:border-teal-800">
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    <span className="font-medium">Faculty Guide:</span> {stats.selectedProject.faculty_guide}
-                  </p>
                   {team.selection_date && (
                     <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                       <span className="font-medium">Selected on:</span>{' '}

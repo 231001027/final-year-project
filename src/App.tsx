@@ -7,12 +7,16 @@ import { NotificationProvider } from './context/NotificationContext';
 // Public Pages
 import LandingPage from './pages/LandingPage';
 import TeamLogin from './pages/TeamLogin';
+import FacultyLogin from './pages/FacultyLogin';
 
 // Student Pages
 import StudentDashboard from './pages/student/StudentDashboard';
 import AvailableTopics from './pages/student/AvailableTopics';
 import MyProject from './pages/student/MyProject';
 import StudentProfile from './pages/student/StudentProfile';
+
+// Faculty Pages
+import FacultyDashboard from './pages/faculty/FacultyDashboard';
 
 // Protected Route Component
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -27,9 +31,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 // Public Route - redirects authenticated users to their dashboard
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, role } = useAuth();
 
   if (isAuthenticated) {
+    if (role === 'faculty') {
+      return <Navigate to="/faculty/dashboard" replace />;
+    }
     return <Navigate to="/student/dashboard" replace />;
   }
 
@@ -46,6 +53,14 @@ function AppRoutes() {
         element={
           <PublicRoute>
             <TeamLogin />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/login/faculty"
+        element={
+          <PublicRoute>
+            <FacultyLogin />
           </PublicRoute>
         }
       />
@@ -80,6 +95,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <StudentProfile />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Faculty Routes */}
+      <Route
+        path="/faculty/dashboard"
+        element={
+          <ProtectedRoute>
+            <FacultyDashboard />
           </ProtectedRoute>
         }
       />

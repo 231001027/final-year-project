@@ -29,4 +29,29 @@ router.post('/team/login', async (req, res, next) => {
   }
 });
 
+router.post('/faculty/login', async (req, res, next) => {
+  try {
+    const { faculty_id, password } = req.body;
+
+    if (!faculty_id || !password) {
+      res.status(400).json({ message: 'Faculty ID and password are required' });
+      return;
+    }
+
+    const result = await pool.query(
+      'SELECT * FROM faculty WHERE faculty_id = $1 AND password_hash = $2',
+      [faculty_id, password]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(401).json({ message: 'Invalid Faculty ID or Password' });
+      return;
+    }
+
+    res.json(mapTimestamps(omitPassword(result.rows[0])));
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

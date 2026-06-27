@@ -1,6 +1,19 @@
-import { Allocation, Project, Team } from '../types';
+import { Allocation, Project, Team, Faculty } from '../types';
 
 const timestamp = '2026-06-14T00:00:00.000Z';
+
+export const seedFaculty: Faculty[] = [
+  {
+    id: 'f0000000-0000-0000-0000-000000000001',
+    faculty_id: 'FAC001',
+    name: 'Faculty Admin',
+    email: 'faculty@college.edu',
+    password_hash: '$2b$10$rKZqZqZqZqZqZqZqZqZqZu',
+    department: 'Computer Science',
+    created_at: timestamp,
+    updated_at: timestamp,
+  },
+];
 
 export const seedProjects: Project[] = [
   {
@@ -1450,6 +1463,7 @@ export const seedTeams: Team[] = teamData.map((t, i) => {
 export const seedAllocations: Allocation[] = [];
 
 export interface AppData {
+  faculty: Faculty[];
   teams: Team[];
   projects: Project[];
   allocations: Allocation[];
@@ -1457,6 +1471,7 @@ export interface AppData {
 
 export function createSeedData(): AppData {
   return {
+    faculty: structuredClone(seedFaculty),
     teams: structuredClone(seedTeams),
     projects: structuredClone(seedProjects),
     allocations: structuredClone(seedAllocations),

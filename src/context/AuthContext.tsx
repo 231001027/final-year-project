@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authenticateTeam, updateTeam, getTeamById } from '../lib/api';
-import { Team, AuthState } from '../types';
+import { authenticateTeam, authenticateFaculty, updateTeam, getTeamById } from '../lib/api';
+import { Team, Faculty, AuthState } from '../types';
 
 interface AuthContextType extends AuthState {
   loginTeam: (teamId: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginFaculty: (facultyId: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateUser: (updates: Partial<Team>) => Promise<void>;
 }
@@ -13,6 +14,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
+    role: null,
     isAuthenticated: false,
   });
 
@@ -24,12 +26,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAuthState(parsed);
 
         // Fetch fresh team details to sync database state with browser session
-        if (parsed.isAuthenticated && parsed.user?.id) {
+        if (parsed.isAuthenticated && parsed.role === 'team' && parsed.user?.id) {
           getTeamById(parsed.user.id)
             .then((freshTeam) => {
               if (freshTeam) {
                 setAuthState({
                   user: freshTeam,
+                  role: 'team',
                   isAuthenticated: true,
                 });
               }
@@ -57,6 +60,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setAuthState({
         user: team,
+        role: 'team',
+        isAuthenticated: true,
+      });
+
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Login failed. Please try again.' };
+    }
+  };
+
+  const loginFaculty = async (facultyId: string, password: string) => {
+    try {
+      const faculty = await authenticateFaculty(facultyId, password);
+      if (!faculty) {
+        return { success: false, error: 'Invalid Faculty ID or Password' };
+      }
+
+      setAuthState({
+        user: faculty,
+        role: 'faculty',
         isAuthenticated: true,
       });
 
@@ -69,6 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setAuthState({
       user: null,
+      role: null,
       isAuthenticated: false,
     });
     localStorage.removeItem('auth');
@@ -95,6 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         ...authState,
         loginTeam,
+        loginFaculty,
         logout,
         updateUser,
       }}

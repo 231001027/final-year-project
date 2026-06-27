@@ -14,6 +14,20 @@ async function seed() {
   await pool.query('DELETE FROM projects');
   await pool.query('DELETE FROM faculty');
 
+  // Insert single faculty for view-only access
+  await pool.query(
+    `INSERT INTO faculty (id, faculty_id, name, email, password_hash, department)
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [
+      'f0000000-0000-0000-0000-000000000001',
+      'FAC001',
+      'Faculty Admin',
+      'faculty@college.edu',
+      '$2b$10$rKZqZqZqZqZqZqZqZqZqZu', // Hash for "faculty123"
+      'Computer Science'
+    ]
+  );
+
   const projects = [
     [
       'c3333333-3333-4333-8333-333333333001',

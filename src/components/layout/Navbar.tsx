@@ -28,18 +28,22 @@ const studentNavItems: NavItem[] = [
   { label: 'Profile', path: '/student/profile', icon: <User className="w-5 h-5" /> },
 ];
 
+const facultyNavItems: NavItem[] = [
+  { label: 'Dashboard', path: '/faculty/dashboard', icon: <Home className="w-5 h-5" /> },
+];
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { user, logout } = useAuth();
+  const { user, role, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const navItems = studentNavItems;
+  const navItems = role === 'faculty' ? facultyNavItems : studentNavItems;
 
   const handleLogout = () => {
     logout();
@@ -88,14 +92,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="p-4 border-b border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center text-white font-semibold">
-                {(user as any)?.team_name?.[0] || 'T'}
+                {role === 'faculty'
+                  ? (user as any)?.name?.[0] || 'F'
+                  : (user as any)?.team_name?.[0] || 'T'}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
-                  {(user as any)?.team_name}
+                  {role === 'faculty'
+                    ? (user as any)?.name
+                    : (user as any)?.team_name}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                  {(user as any)?.team_id}
+                  {role === 'faculty'
+                    ? (user as any)?.faculty_id
+                    : (user as any)?.team_id}
                 </p>
               </div>
             </div>
@@ -158,7 +168,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
             <div className="flex items-center gap-3">
               <span className="hidden sm:inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium">
-                Student
+                {role === 'faculty' ? 'Faculty' : 'Student'}
               </span>
             </div>
           </div>

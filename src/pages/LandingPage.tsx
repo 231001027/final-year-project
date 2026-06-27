@@ -63,6 +63,11 @@ export default function LandingPage() {
               >
                 {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
               </button>
+              <Link to="/login/faculty">
+                <Button variant="ghost" size="sm">
+                  Faculty Login
+                </Button>
+              </Link>
               <Link to="/login/team">
                 <Button size="sm">Team Login</Button>
               </Link>
@@ -93,6 +98,11 @@ export default function LandingPage() {
                 <Link to="/login/team">
                   <Button size="lg" rightIcon={<ArrowRight className="w-4 h-4" />}>
                     Student Login
+                  </Button>
+                </Link>
+                <Link to="/login/faculty">
+                  <Button variant="outline" size="lg" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                    Faculty Portal
                   </Button>
                 </Link>
               </div>

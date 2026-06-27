@@ -1,4 +1,4 @@
-import { Allocation, Project, Team, AllocationWithDetails } from '../types';
+import { Allocation, Project, Team, Faculty, AllocationWithDetails } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
@@ -38,6 +38,18 @@ export async function authenticateTeam(teamId: string, password: string): Promis
     return await request<Team>('/auth/team/login', {
       method: 'POST',
       body: JSON.stringify({ team_id: teamId, password }),
+    });
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 401) return null;
+    throw err;
+  }
+}
+
+export async function authenticateFaculty(facultyId: string, password: string): Promise<Faculty | null> {
+  try {
+    return await request<Faculty>('/auth/faculty/login', {
+      method: 'POST',
+      body: JSON.stringify({ faculty_id: facultyId, password }),
     });
   } catch (err) {
     if (err instanceof ApiError && err.status === 401) return null;

@@ -97,16 +97,6 @@ export default function FacultyLogin() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-            <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-4">
-              Demo Credentials
-            </p>
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 text-xs font-mono">
-              <p className="text-slate-600 dark:text-slate-400">Faculty ID: <span className="text-teal-600 dark:text-teal-400">FAC001</span></p>
-              <p className="text-slate-600 dark:text-slate-400 mt-1">Password: <span className="text-teal-600 dark:text-teal-400">faculty123</span></p>
-            </div>
-          </div>
-
           <div className="mt-6 text-center">
             <Link
               to="/login/team"

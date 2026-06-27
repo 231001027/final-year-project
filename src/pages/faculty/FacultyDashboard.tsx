@@ -6,7 +6,8 @@ import DashboardLayout from '../../components/layout/Navbar';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import { LoadingSpinner } from '../../components/ui/Loading';
-import { Users, BookOpen, CheckCircle, Clock, Filter } from 'lucide-react';
+import { Users, BookOpen, CheckCircle, Clock, Filter, Download } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 export default function FacultyDashboard() {
   const { user } = useAuth();
@@ -53,6 +54,27 @@ export default function FacultyDashboard() {
     if (domainFilter === 'all') return allocations;
     return allocations.filter((a) => a.project?.domain === domainFilter);
   }, [allocations, domainFilter]);
+
+  const handleExportToExcel = () => {
+    const dataToExport = filteredAllocations.map((allocation) => ({
+      'Team Name': allocation.team?.team_name || '',
+      'Team ID': allocation.team?.team_id || '',
+      'Project Title': allocation.project?.title || '',
+      'Domain': allocation.project?.domain || '',
+      'Selection Date': new Date(allocation.allocation_date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }),
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Project Allocations');
+
+    const fileName = `project_allocations_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+  };
 
   if (loading) {
     return (
@@ -139,22 +161,31 @@ export default function FacultyDashboard() {
             <div className="flex items-center justify-between">
               <CardTitle>Project Allocations</CardTitle>
               {allocations.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <Filter className="w-4 h-4 text-slate-400" />
-                  <select
-                    value={domainFilter}
-                    onChange={(e) => setDomainFilter(e.target.value)}
-                    className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-4 h-4 text-slate-400" />
+                    <select
+                      value={domainFilter}
+                      onChange={(e) => setDomainFilter(e.target.value)}
+                      className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="all">All Domains</option>
+                      {domains
+                        .filter((d) => d !== 'all')
+                        .map((domain) => (
+                          <option key={domain} value={domain}>
+                            {domain}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <button
+                    onClick={handleExportToExcel}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                   >
-                    <option value="all">All Domains</option>
-                    {domains
-                      .filter((d) => d !== 'all')
-                      .map((domain) => (
-                        <option key={domain} value={domain}>
-                          {domain}
-                        </option>
-                      ))}
-                  </select>
+                    <Download className="w-4 h-4" />
+                    Export
+                  </button>
                 </div>
               )}
             </div>

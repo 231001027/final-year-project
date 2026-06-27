@@ -69,6 +69,24 @@ export default function FacultyDashboard() {
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+
+    // Set column width to 66pt (88 pixels) for all columns
+    const colWidthPx = 88; // 66pt in pixels
+    worksheet['!cols'] = [
+      { wpx: colWidthPx }, // Team Name
+      { wpx: colWidthPx }, // Team ID
+      { wpx: colWidthPx }, // Project Title
+      { wpx: colWidthPx }, // Domain
+      { wpx: colWidthPx }, // Selection Date
+    ];
+
+    // Set row height to 15pt for all rows
+    const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
+    worksheet['!rows'] = [];
+    for (let i = 0; i <= range.e.r; i++) {
+      worksheet['!rows'][i] = { hpt: 15 };
+    }
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Project Allocations');
 

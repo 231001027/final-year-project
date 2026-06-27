@@ -61,6 +61,10 @@ export async function getProjects(): Promise<Project[]> {
   return request<Project[]>('/projects');
 }
 
+export async function getAvailableProjects(): Promise<Project[]> {
+  return request<Project[]>('/projects/available');
+}
+
 export async function getProjectById(id: string): Promise<Project | undefined> {
   try {
     return await request<Project>(`/projects/${id}`);

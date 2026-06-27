@@ -27,6 +27,21 @@ router.get('/allocated-ids', async (_req, res, next) => {
   }
 });
 
+router.get('/available', async (_req, res, next) => {
+  try {
+    const result = await pool.query(`
+      SELECT p.* FROM projects p
+      WHERE p.id NOT IN (
+        SELECT project_id FROM allocations WHERE status = 'allocated'
+      )
+      ORDER BY p.id ASC
+    `);
+    res.json(result.rows.map((row) => mapProjectRow(row)));
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/:id', async (req, res, next) => {
   try {
     const result = await pool.query('SELECT * FROM projects WHERE id = $1', [req.params.id]);

@@ -2,6 +2,7 @@ export {
   authenticateFaculty,
   authenticateTeam,
   getProjects,
+  getAvailableProjects,
   getProjectById,
   createProject,
   updateProject,

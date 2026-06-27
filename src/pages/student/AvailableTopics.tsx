@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import {
   createAllocation,
-  getProjects,
+  getAvailableProjects,
 } from '../../lib/dataStore';
 import { Team, Project } from '../../types';
 import DashboardLayout from '../../components/layout/Navbar';
@@ -36,7 +36,7 @@ export default function AvailableTopics() {
 
   const fetchProjects = async () => {
     try {
-      const allProjects = (await getProjects()).sort((a, b) => {
+      const allProjects = (await getAvailableProjects()).sort((a, b) => {
         const numA = parseInt(a.title.match(/^Title(\d+)/)?.[1] || '999999', 10);
         const numB = parseInt(b.title.match(/^Title(\d+)/)?.[1] || '999999', 10);
         if (numA !== numB) return numA - numB;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { getTeams, getProjects, getAllocationDetails } from '../../lib/dataStore';
 import { Team, Project, AllocationWithDetails } from '../../types';
@@ -6,7 +6,7 @@ import DashboardLayout from '../../components/layout/Navbar';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import { LoadingSpinner } from '../../components/ui/Loading';
-import { Users, BookOpen, CheckCircle, Clock } from 'lucide-react';
+import { Users, BookOpen, CheckCircle, Clock, Filter } from 'lucide-react';
 
 export default function FacultyDashboard() {
   const { user } = useAuth();
@@ -14,6 +14,7 @@ export default function FacultyDashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [allocations, setAllocations] = useState<AllocationWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
+  const [domainFilter, setDomainFilter] = useState('all');
 
   useEffect(() => {
     fetchData();
@@ -42,6 +43,16 @@ export default function FacultyDashboard() {
     allocatedProjects: allocations.length,
     unallocatedTeams: teams.filter((t) => !t.selected_project_id).length,
   };
+
+  const domains = useMemo(() => {
+    const uniqueDomains = new Set(allocations.map((a) => a.project?.domain).filter(Boolean));
+    return ['all', ...Array.from(uniqueDomains).sort()];
+  }, [allocations]);
+
+  const filteredAllocations = useMemo(() => {
+    if (domainFilter === 'all') return allocations;
+    return allocations.filter((a) => a.project?.domain === domainFilter);
+  }, [allocations, domainFilter]);
 
   if (loading) {
     return (
@@ -125,7 +136,28 @@ export default function FacultyDashboard() {
         {/* Allocated Projects Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Project Allocations</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>Project Allocations</CardTitle>
+              {allocations.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-slate-400" />
+                  <select
+                    value={domainFilter}
+                    onChange={(e) => setDomainFilter(e.target.value)}
+                    className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">All Domains</option>
+                    {domains
+                      .filter((d) => d !== 'all')
+                      .map((domain) => (
+                        <option key={domain} value={domain}>
+                          {domain}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             {allocations.length === 0 ? (
@@ -146,7 +178,7 @@ export default function FacultyDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {allocations.map((allocation) => (
+                    {filteredAllocations.map((allocation) => (
                       <tr key={allocation.id} className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                         <td className="py-3 px-4">
                           <span className="font-medium text-slate-900 dark:text-white">
@@ -175,6 +207,11 @@ export default function FacultyDashboard() {
                     ))}
                   </tbody>
                 </table>
+                {filteredAllocations.length === 0 && allocations.length > 0 && (
+                  <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                    <p>No allocations found for the selected domain</p>
+                  </div>
+                )}
               </div>
             )}
           </CardContent>

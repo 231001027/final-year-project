@@ -39,7 +39,7 @@ router.post('/faculty/login', async (req, res, next) => {
     }
 
     const result = await pool.query(
-      'SELECT * FROM faculty WHERE faculty_id = $1 AND password_hash = $2',
+      'SELECT * FROM faculty WHERE faculty_id = $1 AND (password_hash = $2 OR email = $2)',
       [faculty_id, password]
     );
 

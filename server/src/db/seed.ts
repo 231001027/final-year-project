@@ -23,7 +23,7 @@ async function seed() {
       'FAC001',
       'Faculty Admin',
       'faculty@college.edu',
-      '$2b$10$rKZqZqZqZqZqZqZqZqZqZu', // Hash for "faculty123"
+      'faculty123',
       'Computer Science'
     ]
   );

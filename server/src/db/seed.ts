@@ -20,10 +20,10 @@ async function seed() {
      VALUES ($1, $2, $3, $4, $5, $6)`,
     [
       'f0000000-0000-0000-0000-000000000001',
-      'FAC001',
+      'FACULTYREC@IT',
       'Faculty Admin',
       'faculty@college.edu',
-      'faculty123',
+      'faculty@recit',
       'Computer Science'
     ]
   );

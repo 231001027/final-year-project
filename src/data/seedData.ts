@@ -5,7 +5,7 @@ const timestamp = '2026-06-14T00:00:00.000Z';
 export const seedFaculty: Faculty[] = [
   {
     id: 'f0000000-0000-0000-0000-000000000001',
-    faculty_id: 'FAC001',
+    faculty_id: 'FACULTYREC@IT',
     name: 'Faculty Admin',
     email: 'faculty@college.edu',
     password_hash: '$2b$10$rKZqZqZqZqZqZqZqZqZqZu',

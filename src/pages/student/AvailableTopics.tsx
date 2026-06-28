@@ -100,7 +100,8 @@ export default function AvailableTopics() {
       fetchProjects();
     } catch (error) {
       console.error('Error selecting project:', error);
-      showNotification('error', 'Failed to select project. Please try again.');
+      const errorMessage = (error as any)?.message || 'Failed to select project. Please try again.';
+      showNotification('error', errorMessage);
     } finally {
       setSelecting(false);
     }

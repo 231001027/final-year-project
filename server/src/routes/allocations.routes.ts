@@ -94,7 +94,7 @@ router.post('/', async (req, res, next) => {
 
     if (projectAllocated.rows.length > 0) {
       await client.query('ROLLBACK');
-      res.status(409).json({ message: 'Project is no longer available' });
+      res.status(409).json({ message: 'This topic is already selected by other user. Please try again.' });
       return;
     }
 

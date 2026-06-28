@@ -90,6 +90,8 @@ export default function AvailableTopics() {
         status: 'allocated',
       });
 
+      setJustSelected(true);
+
       const now = new Date().toISOString();
       await updateUser({
         selected_project_id: confirmModal.project.id,
@@ -97,7 +99,6 @@ export default function AvailableTopics() {
       });
 
       showNotification('success', 'Project selected successfully!');
-      setJustSelected(true);
       setConfirmModal({ open: false, project: null });
       fetchProjects();
     } catch (error) {
@@ -132,22 +133,27 @@ export default function AvailableTopics() {
           </p>
         </div>
 
-        {/* Warning Banner if already selected */}
-        {team.selected_project_id && (
-          <div className={`${justSelected ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800'} border rounded-lg p-4 flex items-start gap-3`}>
-            {justSelected ? (
-              <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-            ) : (
-              <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-            )}
+        {/* Success banner for just selected */}
+        {justSelected && team.selected_project_id && (
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
             <div>
-              <p className={`font-medium ${justSelected ? 'text-green-800 dark:text-green-200' : 'text-amber-800 dark:text-amber-200'}`}>
-                {justSelected ? 'Project Selected Successfully' : 'Project Already Selected'}
+              <p className="font-medium text-green-800 dark:text-green-200">Project Selected Successfully</p>
+              <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                You have successfully selected your project topic.
               </p>
-              <p className={`text-sm ${justSelected ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'} mt-1`}>
-                {justSelected
-                  ? 'You have successfully selected your project topic.'
-                  : 'You have already selected a project. Each team can only select one project.'}
+            </div>
+          </div>
+        )}
+
+        {/* Warning Banner if already selected (but not just selected) */}
+        {team.selected_project_id && !justSelected && (
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium text-amber-800 dark:text-amber-200">Project  Selected Successfully</p>
+              <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                You have selected a project successfully. 
               </p>
             </div>
           </div>

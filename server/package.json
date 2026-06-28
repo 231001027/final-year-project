@@ -9,21 +9,30 @@
     "build": "tsc",
     "db:setup": "tsx src/db/setup.ts",
     "db:seed": "tsx src/db/seed.ts",
-    "db:clear": "tsx src/db/clear.ts"
+    "db:clear": "tsx src/db/clear.ts",
+    "migrate": "node-pg-migrate up",
+    "migrate:create": "node-pg-migrate create"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^8.5.2",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.13.3",
-    "redis": "^6.0.1"
+    "redis": "^6.0.1",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.13.10",
     "@types/pg": "^8.11.11",
+    "artillery": "^2.0.33",
+    "node-pg-migrate": "^8.0.4",
     "tsx": "^4.19.3",
     "typescript": "^5.5.3"
   }

@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { pool } from '../db/pool.js';
 import { mapTimestamps, omitPassword } from '../utils/helpers.js';
+import bcrypt from 'bcrypt';
+import { generateToken } from '../utils/jwt.js';
 
 const router = Router();
 
@@ -14,8 +16,8 @@ router.post('/team/login', async (req, res, next) => {
     }
 
     const result = await pool.query(
-      'SELECT * FROM teams WHERE team_id = $1 AND (password_hash = $2 OR student1_roll_no = $2 OR student2_roll_no = $2)',
-      [team_id, password]
+      'SELECT * FROM teams WHERE team_id = $1',
+      [team_id]
     );
 
     if (result.rows.length === 0) {
@@ -23,7 +25,26 @@ router.post('/team/login', async (req, res, next) => {
       return;
     }
 
-    res.json(mapTimestamps(omitPassword(result.rows[0])));
+    const team = result.rows[0];
+    
+    // Check password with bcrypt
+    const isPasswordValid = await bcrypt.compare(password, team.password_hash);
+    if (!isPasswordValid) {
+      res.status(401).json({ message: 'Invalid Team ID or Password' });
+      return;
+    }
+
+    // Generate JWT token
+    const token = generateToken({
+      id: team.id,
+      role: 'team',
+      team_id: team.team_id,
+    });
+
+    res.json({
+      ...mapTimestamps(omitPassword(team)),
+      token,
+    });
   } catch (err) {
     next(err);
   }
@@ -39,8 +60,8 @@ router.post('/faculty/login', async (req, res, next) => {
     }
 
     const result = await pool.query(
-      'SELECT * FROM faculty WHERE faculty_id = $1 AND (password_hash = $2 OR email = $2)',
-      [faculty_id, password]
+      'SELECT * FROM faculty WHERE faculty_id = $1',
+      [faculty_id]
     );
 
     if (result.rows.length === 0) {
@@ -48,7 +69,26 @@ router.post('/faculty/login', async (req, res, next) => {
       return;
     }
 
-    res.json(mapTimestamps(omitPassword(result.rows[0])));
+    const faculty = result.rows[0];
+    
+    // Check password with bcrypt
+    const isPasswordValid = await bcrypt.compare(password, faculty.password_hash);
+    if (!isPasswordValid) {
+      res.status(401).json({ message: 'Invalid Faculty ID or Password' });
+      return;
+    }
+
+    // Generate JWT token
+    const token = generateToken({
+      id: faculty.id,
+      role: 'faculty',
+      faculty_id: faculty.faculty_id,
+    });
+
+    res.json({
+      ...mapTimestamps(omitPassword(faculty)),
+      token,
+    });
   } catch (err) {
     next(err);
   }

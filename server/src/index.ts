@@ -8,6 +8,7 @@ import teamsRoutes from './routes/teams.routes.js';
 import allocationsRoutes from './routes/allocations.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { connectRedis, disconnectRedis } from './db/redis.js';
+import logger from './utils/logger.js';
 
 dotenv.config();
 
@@ -59,23 +60,23 @@ app.use(errorHandler);
 connectRedis().catch(console.error);
 
 const server = app.listen(PORT, async () => {
-  console.log(`ProjectPortal API running on http://localhost:${PORT}`);
+  logger.info(`ProjectPortal API running on http://localhost:${PORT}`);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
-  console.log('SIGTERM signal received: closing HTTP server');
+  logger.info('SIGTERM signal received: closing HTTP server');
   server.close(async () => {
-    console.log('HTTP server closed');
+    logger.info('HTTP server closed');
     await disconnectRedis();
     process.exit(0);
   });
 });
 
 process.on('SIGINT', async () => {
-  console.log('SIGINT signal received: closing HTTP server');
+  logger.info('SIGINT signal received: closing HTTP server');
   server.close(async () => {
-    console.log('HTTP server closed');
+    logger.info('HTTP server closed');
     await disconnectRedis();
     process.exit(0);
   });

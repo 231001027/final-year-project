@@ -1,4 +1,6 @@
 import { pool } from './pool.js';
+import bcrypt from 'bcrypt';
+import logger from '../utils/logger.js';
 
 function projectId(num: number) {
   return `c3333333-3333-4333-8333-333333333${String(num).padStart(3, '0')}`;
@@ -14,6 +16,9 @@ async function seed() {
   await pool.query('DELETE FROM projects');
   await pool.query('DELETE FROM faculty');
 
+  // Hash faculty password
+  const facultyPassword = await bcrypt.hash('faculty@recit', 10);
+
   // Insert single faculty for view-only access
   await pool.query(
     `INSERT INTO faculty (id, faculty_id, name, email, password_hash, department)
@@ -23,7 +28,7 @@ async function seed() {
       'FACULTYREC@IT',
       'Faculty Admin',
       'faculty@college.edu',
-      'faculty@recit',
+      facultyPassword,
       'Computer Science'
     ]
   );
@@ -752,6 +757,9 @@ async function seed() {
     const s1_email = `${t.s1_roll}@college.edu`;
     const s2_email = `${t.s2_roll}@college.edu`;
 
+    // Hash team password (using student1 roll number as password)
+    const teamPassword = await bcrypt.hash(t.s1_roll, 10);
+
     await pool.query(
       `INSERT INTO teams (
         id, team_id, team_name, password_hash, department,
@@ -765,7 +773,7 @@ async function seed() {
         $20, $21
       )`,
       [
-        teamUuid, t.team_id, `Batch ${t.team_id}`, t.s1_roll, 'Information Technology',
+        teamUuid, t.team_id, `Batch ${t.team_id}`, teamPassword, 'Information Technology',
         t.s1_name, s1_email, t.s1_roll, 'Information Technology', '4', '7', 'A',
         t.s2_name, s2_email, t.s2_roll, 'Information Technology', '4', '7', 'A',
         null, null
@@ -773,11 +781,11 @@ async function seed() {
     );
   }
 
-  console.log('Database seeded successfully.');
+  logger.info('Database seeded successfully.');
   await pool.end();
 }
 
 seed().catch((err) => {
-  console.error('Database seed failed:', err);
+  logger.error('Database seed failed:', err);
   process.exit(1);
 });

@@ -1,0 +1,37 @@
+config:
+  target: "http://localhost:3001"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      name: "Warm up"
+    - duration: 120
+      arrivalRate: 50
+      name: "Ramp up"
+    - duration: 300
+      arrivalRate: 100
+      name: "Sustained load"
+  processor: "./load-test-processor.js"
+
+scenarios:
+  - name: "Health Check"
+    flow:
+      - get:
+          url: "/api/health"
+
+  - name: "Get All Projects"
+    flow:
+      - get:
+          url: "/api/projects"
+
+  - name: "Get Available Projects"
+    flow:
+      - get:
+          url: "/api/projects/available"
+
+  - name: "Team Login"
+    flow:
+      - post:
+          url: "/api/auth/team/login"
+          json:
+            team_id: "27A01"
+            password: "2116231001001"

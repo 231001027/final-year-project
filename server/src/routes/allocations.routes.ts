@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { pool } from '../db/pool.js';
 import { mapProjectRow, mapTimestamps, omitPassword } from '../utils/helpers.js';
+import { cacheDelPattern } from '../db/cache.js';
 
 const router = Router();
 
@@ -113,6 +114,10 @@ router.post('/', async (req, res, next) => {
     );
 
     await client.query('COMMIT');
+
+    // Invalidate cache for projects
+    await cacheDelPattern('projects:*');
+
     res.status(201).json(mapTimestamps(allocationResult.rows[0]));
   } catch (err) {
     await client.query('ROLLBACK');

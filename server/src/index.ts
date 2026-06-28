@@ -42,6 +42,7 @@ if (process.env.NODE_ENV === 'production') {
     message: 'Too many requests from this IP, please try again later.',
     standardHeaders: true,
     legacyHeaders: false,
+    skip: (req) => req.path.startsWith('/api/auth'), // Skip auth routes
   });
   app.use('/api/', limiter);
 }

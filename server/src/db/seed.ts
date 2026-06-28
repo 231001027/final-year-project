@@ -640,7 +640,6 @@ async function seed() {
     { team_id: '27A17', s1_name: 'Avinash V', s1_roll: '2116231001023', s2_name: 'Gowtham S', s2_roll: '2116231001050' },
     { team_id: '27A18', s1_name: 'Avishnavi P', s1_roll: '2116231001024', s2_name: 'Bhagya Lakshmi M', s2_roll: '2116231001025' },
     { team_id: '27A20', s1_name: 'Bharathkumar S', s1_roll: '2116231001028', s2_name: 'Faqrudeen Faizan Z', s2_roll: '2116231001042' },
-    { team_id: '27A21', s1_name: 'Deepak k', s1_roll: '2116231001029', s2_name: 'Dinesh Kumar B', s2_roll: '2116231001039' },
     { team_id: '27A23', s1_name: 'Devadharshan S G', s1_roll: '2116231001031', s2_name: 'Dhiyanesh S', s2_roll: '2116231001036' },
     { team_id: '27A24', s1_name: 'Dhanush M', s1_roll: '2116231001033', s2_name: 'Hemanth C', s2_roll: '2116231001062' },
     { team_id: '27A26', s1_name: 'Dhuvarkesh H B', s1_roll: '2116231001037', s2_name: 'Furdeen F', s2_roll: '2116231001043' },

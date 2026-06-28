@@ -37,7 +37,7 @@ app.use(express.json());
 // Rate limiting middleware
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: parseInt(process.env.RATE_LIMIT_MAX || '1000'), // Limit each IP (default 1000 for development)
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,

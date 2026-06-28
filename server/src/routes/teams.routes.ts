@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { pool } from '../db/pool.js';
 import { mapTimestamps, omitPassword } from '../utils/helpers.js';
+import { authenticate, authorize } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -23,7 +24,7 @@ const TEAM_UPDATE_FIELDS = [
   'selection_date',
 ] as const;
 
-router.get('/', async (_req, res, next) => {
+router.get('/', authenticate, authorize('faculty'), async (_req, res, next) => {
   try {
     const result = await pool.query('SELECT * FROM teams ORDER BY created_at ASC');
     res.json(result.rows.map((row) => mapTimestamps(omitPassword(row))));
@@ -32,7 +33,7 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authenticate, async (req, res, next) => {
   try {
     const result = await pool.query('SELECT * FROM teams WHERE id = $1', [req.params.id]);
 
@@ -41,13 +42,18 @@ router.get('/:id', async (req, res, next) => {
       return;
     }
 
+    // Only allow teams to view their own data
+    if (req.user?.role === 'team' && req.user.id !== req.params.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
     res.json(mapTimestamps(omitPassword(result.rows[0])));
   } catch (err) {
     next(err);
   }
 });
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', authenticate, authorize('faculty'), async (req, res, next) => {
   try {
     const updates = req.body as Record<string, unknown>;
     const setClauses: string[] = [];

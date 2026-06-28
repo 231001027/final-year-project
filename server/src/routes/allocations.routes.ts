@@ -2,10 +2,11 @@ import { Router } from 'express';
 import { pool } from '../db/pool.js';
 import { mapProjectRow, mapTimestamps, omitPassword } from '../utils/helpers.js';
 import { cacheDelPattern } from '../db/cache.js';
+import { authenticate, authorize } from '../middleware/auth.js';
 
 const router = Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', authenticate, authorize('faculty'), async (req, res, next) => {
   try {
     const status = req.query.status as string | undefined;
     let query = 'SELECT * FROM allocations';
@@ -25,7 +26,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/details', async (req, res, next) => {
+router.get('/details', authenticate, authorize('faculty'), async (req, res, next) => {
   try {
     const status = (req.query.status as string) || 'allocated';
 
@@ -61,7 +62,7 @@ router.get('/details', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', authenticate, authorize('team'), async (req, res, next) => {
   const client = await pool.connect();
 
   try {

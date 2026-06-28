@@ -11,12 +11,39 @@ class ApiError extends Error {
   }
 }
 
+// Token management
+let authToken: string | null = null;
+
+export function setToken(token: string) {
+  authToken = token;
+  localStorage.setItem('auth_token', token);
+}
+
+export function getToken(): string | null {
+  if (!authToken) {
+    authToken = localStorage.getItem('auth_token');
+  }
+  return authToken;
+}
+
+export function clearToken() {
+  authToken = null;
+  localStorage.removeItem('auth_token');
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options?.headers as Record<string, string> || {}),
+  };
+
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const response = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
+    headers,
     ...options,
   });
 
@@ -27,30 +54,42 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearToken();
+      window.location.href = '/login';
+    }
     throw new ApiError(data.message || 'Request failed', response.status);
   }
 
   return data as T;
 }
 
-export async function authenticateTeam(teamId: string, password: string): Promise<Team | null> {
+export async function authenticateTeam(teamId: string, password: string): Promise<Team & { token: string } | null> {
   try {
-    return await request<Team>('/auth/team/login', {
+    const result = await request<Team & { token: string }>('/auth/team/login', {
       method: 'POST',
       body: JSON.stringify({ team_id: teamId, password }),
     });
+    if (result.token) {
+      setToken(result.token);
+    }
+    return result;
   } catch (err) {
     if (err instanceof ApiError && err.status === 401) return null;
     throw err;
   }
 }
 
-export async function authenticateFaculty(facultyId: string, password: string): Promise<Faculty | null> {
+export async function authenticateFaculty(facultyId: string, password: string): Promise<Faculty & { token: string } | null> {
   try {
-    return await request<Faculty>('/auth/faculty/login', {
+    const result = await request<Faculty & { token: string }>('/auth/faculty/login', {
       method: 'POST',
       body: JSON.stringify({ faculty_id: facultyId, password }),
     });
+    if (result.token) {
+      setToken(result.token);
+    }
+    return result;
   } catch (err) {
     if (err instanceof ApiError && err.status === 401) return null;
     throw err;

@@ -2,10 +2,11 @@ import { Router } from 'express';
 import { pool } from '../db/pool.js';
 import { cleanProjectTitle, mapProjectRow, mapTimestamps } from '../utils/helpers.js';
 import { cacheGet, cacheSet, cacheDelPattern } from '../db/cache.js';
+import { authenticate, authorize, optionalAuth } from '../middleware/auth.js';
 
 const router = Router();
 
-router.get('/', async (_req, res, next) => {
+router.get('/', optionalAuth, async (_req, res, next) => {
   try {
     const cacheKey = 'projects:all';
     const cached = await cacheGet(cacheKey);
@@ -39,7 +40,7 @@ router.get('/allocated-ids', async (_req, res, next) => {
   }
 });
 
-router.get('/available', async (_req, res, next) => {
+router.get('/available', optionalAuth, async (_req, res, next) => {
   try {
     const cacheKey = 'projects:available';
     const cached = await cacheGet(cacheKey);
@@ -80,7 +81,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', authenticate, authorize('faculty'), async (req, res, next) => {
   try {
     const { title, domain, description, max_teams } = req.body;
 
@@ -88,7 +89,7 @@ router.post('/', async (req, res, next) => {
       `INSERT INTO projects (title, domain, description, faculty_guide, max_teams, created_by)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [cleanProjectTitle(title), domain, description, 'Not Assigned', max_teams ?? 1, null]
+      [cleanProjectTitle(title), domain, description, 'Not Assigned', max_teams ?? 1, req.user?.id]
     );
 
     res.status(201).json(mapProjectRow(result.rows[0]));
@@ -97,7 +98,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', authenticate, authorize('faculty'), async (req, res, next) => {
   try {
     const { title, domain, description } = req.body;
 
@@ -120,7 +121,7 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', authenticate, authorize('faculty'), async (req, res, next) => {
   const client = await pool.connect();
 
   try {

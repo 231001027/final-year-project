@@ -22,7 +22,18 @@ This guide explains how to set up the project with Redis caching and rate limiti
 4. Click "Save Changes"
 5. Your service will automatically redeploy
 
-### Step 3: Verify Redis Connection
+### Step 3: Add JWT_SECRET to Environment Variables
+1. Go to your web service (projectportal-api)
+2. Click "Environment" tab
+3. Add new environment variable:
+   - Key: `JWT_SECRET`
+   - Value: Your JWT secret key (use a strong, random string)
+4. Click "Save Changes"
+5. Your service will automatically redeploy
+
+**Important:** The JWT_SECRET is required for JWT authentication. Keep it secure and never commit it to version control.
+
+### Step 4: Verify Redis Connection
 After deployment, check your service logs. You should see:
 ```
 Connected to Redis

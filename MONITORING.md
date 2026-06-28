@@ -2,6 +2,18 @@
 
 This guide explains how to monitor the Project Portal application using Render's built-in metrics and logging.
 
+## Environment Variables
+
+The following environment variables are required for the application to function correctly:
+
+- **DATABASE_URL** - PostgreSQL database connection string
+- **PORT** - Server port (default: 3001)
+- **REDIS_URL** - Redis connection string (optional, for caching)
+- **JWT_SECRET** - Secret key for JWT token generation (required for authentication)
+- **CORS_ORIGIN** - Allowed CORS origins (optional)
+
+**Important:** Never commit the `.env` file or any secrets to version control. Use environment variables in production.
+
 ## Render Built-in Monitoring
 
 Render provides built-in monitoring for all services at no additional cost.

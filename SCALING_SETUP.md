@@ -1,8 +1,8 @@
-# Scaling Setup Guide
+# Scaling Setup Guide (Free Tier)
 
-This guide explains how to set up the project to handle 100+ concurrent users by configuring Redis and upgrading the Render plan.
+This guide explains how to set up the project with Redis caching and rate limiting using Render's free tier.
 
-## 1. Set Up Redis on Render
+## 1. Set Up Redis on Render (Free Tier)
 
 ### Step 1: Create a Redis Instance
 1. Go to [Render Dashboard](https://dashboard.render.com)
@@ -10,7 +10,7 @@ This guide explains how to set up the project to handle 100+ concurrent users by
 3. Select "Redis"
 4. Choose a name (e.g., `projectportal-redis`)
 5. Select region (same as your web service)
-6. Choose plan: **Free** (for testing) or **Starter** ($5/month for production)
+6. Choose plan: **Free**
 7. Click "Create Redis"
 
 ### Step 2: Add Redis URL to Environment Variables
@@ -28,40 +28,25 @@ After deployment, check your service logs. You should see:
 Connected to Redis
 ```
 
-## 2. Upgrade Render Plan (for 100+ Users)
+## 2. Free Tier Limitations
 
-### Current Limitations (Free Tier)
-- 512MB RAM
-- 0.1 CPU
-- Spins down after 15 minutes inactivity
-- Cold start delays (10-30 seconds)
-- Not suitable for 100+ concurrent users
+### Current Free Tier Specs
+- **Web Service**: 512MB RAM, 0.1 CPU
+- **Redis**: 25MB RAM
+- **Spin-down**: Web service spins down after 15 minutes inactivity
+- **Cold starts**: 10-30 seconds on first request after spin-down
+- **Concurrent users**: Can handle moderate traffic (not 100+ simultaneous)
 
-### Recommended Upgrade: Starter Plan ($7/month)
-
-### Step 1: Upgrade Web Service
-1. Go to your web service (projectportal-api)
-2. Click "Settings" tab
-3. Scroll to "Plan" section
-4. Click "Change Plan"
-5. Select "Starter" ($7/month)
-6. Click "Save Changes"
-
-### Starter Plan Benefits
-- 512MB RAM → 512MB RAM (same)
-- 0.1 CPU → 0.5 CPU (5x more)
-- No spin-down (always on)
-- No cold starts
-- Can handle 100+ concurrent users
-
-### Alternative: Standard Plan ($25/month)
-- 2GB RAM
-- 1 CPU
-- Better for 200+ concurrent users
+### What Works on Free Tier
+- ✅ Development and testing
+- ✅ Small-scale production (10-20 concurrent users)
+- ✅ Redis caching reduces database load
+- ✅ Rate limiting prevents abuse
+- ❌ Not suitable for 100+ concurrent users
 
 ## 3. Caching Implementation
 
-The project now includes Redis caching for:
+The project includes Redis caching for:
 
 ### Cached Endpoints
 - `GET /api/projects` - All projects (cached for 5 minutes)
@@ -87,7 +72,7 @@ Rate limiting is configured to prevent abuse:
 ## 5. Monitoring
 
 After setup, monitor:
-1. **Redis Memory Usage**: Check Redis dashboard
+1. **Redis Memory Usage**: Check Redis dashboard (free tier: 25MB limit)
 2. **Service CPU/RAM**: Check Render service metrics
 3. **Response Times**: Monitor API performance
 4. **Error Rates**: Check logs for cache errors
@@ -114,15 +99,25 @@ Make 100+ requests within 15 minutes from same IP - should get 429 error.
 After completing these steps:
 - ✅ Redis caching reduces database load
 - ✅ Rate limiting prevents abuse
-- ✅ Upgraded plan handles 100+ concurrent users
-- ✅ No cold starts or spin-downs
-- ✅ Better performance and reliability
+- ✅ Free tier setup complete
+- ⚠️ Cold starts may occur (15 min inactivity)
+- ⚠️ Limited to 10-20 concurrent users on free tier
 
-## Cost Estimate
+## Cost (Free Tier)
 
 - Redis Free: $0/month
-- Redis Starter: $5/month
-- Web Service Starter: $7/month
-- **Total**: $7-12/month for production
+- Web Service Free: $0/month
+- **Total**: $0/month
 
-This setup can comfortably handle 100+ concurrent users.
+## For 100+ Concurrent Users
+
+To handle 100+ concurrent users, you would need to upgrade:
+- Web Service to Starter plan ($7/month)
+- Redis to Starter plan ($5/month)
+- **Total**: $12/month
+
+This provides:
+- 5x more CPU (0.5 instead of 0.1)
+- No spin-down (always on)
+- No cold starts
+- Can handle 100+ concurrent users
